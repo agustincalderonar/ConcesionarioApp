@@ -1,0 +1,15 @@
+es/upsa/ssi/common/model/ports/usecases/DeleteCocheByMatricula.class
+es/upsa/ssi/common/model/ports/usecases/InsertCoche.class
+es/upsa/ssi/common/model/entities/CochePojo.class
+es/upsa/ssi/common/model/entities/CochePojo$CochePojoBuilder.class
+es/upsa/ssi/common/model/ports/repositories/Repository.class
+es/upsa/ssi/common/model/ports/repositories/CacheDao.class
+es/upsa/ssi/common/model/ports/usecases/UpdateCoche.class
+es/upsa/ssi/common/model/exceptions/AppSQLException.class
+es/upsa/ssi/common/model/entities/Coche.class
+es/upsa/ssi/common/model/exceptions/CocheNotFoundException.class
+es/upsa/ssi/common/model/ports/usecases/FindCoches.class
+es/upsa/ssi/common/model/exceptions/AppException.class
+es/upsa/ssi/common/model/ports/repositories/CochesDao.class
+es/upsa/ssi/common/model/ports/usecases/FindCocheByMatricula.class
+es/upsa/ssi/common/model/entities/Coche$CocheBuilder.class

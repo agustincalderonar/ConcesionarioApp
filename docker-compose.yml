@@ -1,0 +1,63 @@
+version: "3.9"
+services:
+  #Recordar que aqui redefinimos ciertas cosas, pero muchas deben coincidir
+
+  #Esto levanta la base de datos postgres, el nombre que le demos deben tenerlo el resto de partes en DATABASE_HOST: postgres
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_DB: upsa
+      POSTGRES_USER: system
+      POSTGRES_PASSWORD: manager
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - pg_data:/var/lib/postgresql/data/pgdata
+
+  #Esto levanta redis, cuando lo quiera levantar en tiempo de ejecucion lo hago usando el shell ./redis.sh en
+  redis:
+    image: bitnami/redis
+    environment:
+      REDIS_PORT_NUMBER: 6379
+      ALLOW_EMPTY_PASSWORD: yes
+    ports:
+      - 6379:6379
+
+  #Si nos fijamos en el archivo buildJee.sh y runJee.sh, estamos haciendo lo mismo, esto lo sustituye
+  #(no tiene que coincidir ya que se ejecuta uno u otro)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: docker/Dockerfile
+    expose:
+      - 8080
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+      #Aqui definimos los puertos, es como en runJee.sh
+    ports:
+      - 81:8080
+    depends_on:
+      - postgres
+
+
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: src/main/docker/Dockerfile.jvm
+    environment:
+      #Aqui definimos la uri para conectarnos al backend(redefine lo del application.properties)
+      #Debe ser el nombre que le pongamos al backend en este mismo docker compose
+      #COCHES_REMOTE_API_MP_REST_URI: http://backend-quarkus:8080
+      COCHES_REMOTE_API_MP_REST_URI: http://backend:8080
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_TYPE: standalone
+    depends_on:
+      - backend
+      - redis
+    ports:
+      - 88:8080
+
+
+volumes:
+  pg_data: {}
